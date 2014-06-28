@@ -24,7 +24,6 @@
 <%--     	<form:select path="chief.id" items="${chiefList}" itemLabel="name" itemValue="id" /> --%>
     	
     	<form:select path="chief.id" id="chief.id">
-      			<form:option value="" selected="selected" />
                 <form:options items="${chiefList}" itemValue="id" itemLabel="name"/>
          </form:select>
     </div>
