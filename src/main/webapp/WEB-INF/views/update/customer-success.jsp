@@ -19,11 +19,13 @@
 		<form:label path="name"><spring:message code="customer.form.label.name"/>:</form:label>
         <form:input path="name" id="name" type="text"/>                        
     </div>
-    <div>	
-    	<form:select path="chief.id" id="chief" >
+    <div>
+    	<form:label path="chief"><spring:message code="customer.form.label.chief"/>:</form:label>	
+    	<form:select path="chief" id="chief" >
     			<form:option value=""></form:option>
                 <form:options items="${chiefList}" itemValue="id" itemLabel="name"/>
          </form:select>
+        <form:errors path="chief" cssClass="error" />
     </div>
     
 	<div>

@@ -1,5 +1,6 @@
 package com.msynoradzki.customer.contoller.customer.crud;
 
+import java.beans.PropertyEditorSupport;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +35,12 @@ public class CustomerCRUDController {
 	
     @Autowired
     private CustomerValidator customerValidator;
+    
+    
+    @ModelAttribute("chiefList")
+    public List<Customer> populateCustomerList(){
+    	return (List<Customer>)customerService.getAll();
+    }
 
 	@RequestMapping(value = (ApplicationConstants.READ_REQUEST_MAPPING + "/{id}"), method = RequestMethod.GET)
 	public String read(@PathVariable Long id, Model model,
@@ -53,7 +62,6 @@ public class CustomerCRUDController {
     public String getCreateView(Model model, HttpServletRequest request, HttpSession session) {
     	Customer customer = new Customer();
     	model.addAttribute("entity", customer);
-    	model.addAttribute("chiefList", prepareChiefList());
     	return "/" + ApplicationConstants.CREATE_VIEW_CATALOGUE+ "/customer-success";
     }
 
@@ -67,7 +75,6 @@ public class CustomerCRUDController {
     @RequestMapping(value = (ApplicationConstants.UPDATE_REQUEST_MAPPING + "/{id}"), method = RequestMethod.GET)
     public String getUpdateView(@PathVariable Long id, Model model, HttpServletRequest request) {
             Customer customerToUpdate = customerService.findById(id);
-            model.addAttribute("chiefList", prepareChiefList());
             model.addAttribute("entity", customerToUpdate);
         return "/" + ApplicationConstants.UPDATE_VIEW_CATALOGUE+ "/customer-success";
     }
@@ -76,7 +83,6 @@ public class CustomerCRUDController {
     public String update(@ModelAttribute("entity") @Valid Customer customer, BindingResult bindingResult, @PathVariable Long id, Model model,HttpSession session, RedirectAttributes attributes, HttpServletRequest request) {
     	customerValidator.validate(customer, bindingResult);
     	if(bindingResult.hasErrors()){
-    		 model.addAttribute("chiefList", prepareChiefList());
     		 return "/" + ApplicationConstants.UPDATE_VIEW_CATALOGUE+ "/customer-success";
     	}
     	customerService.save(customer);
@@ -89,9 +95,17 @@ public class CustomerCRUDController {
 		return path;
 	}
 	
-
-    private List<Customer> prepareChiefList() {
-		return (List<Customer>) customerService.getAll();
-	}
+	 @InitBinder
+	    protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) {
+	        binder.registerCustomEditor(Customer.class, "chief",
+	                new PropertyEditorSupport() {
+	                    public void setAsText(String chiefId) {
+	                    	if(chiefId!=null && !chiefId.isEmpty()){
+	                    		Customer chief = customerService.getRepository().findOne(Long.parseLong(chiefId));
+	                    		setValue(chief);
+	                    	}
+	                    }
+	                });
+	    }
 	
 }

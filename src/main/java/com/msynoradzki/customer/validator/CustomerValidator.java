@@ -16,14 +16,23 @@ public class CustomerValidator implements Validator {
 
 	@Override
 	public void validate(Object target, Errors errors) {
-		validateChief(target, errors);
+		Customer customer = (Customer)target;
+		validateNotEmptyChief(customer, errors);
+		validateCustomerAndChiefNotEqual(customer, errors);
 
 	}
 
-	//TODO correct this method
-	private void validateChief(Object target, Errors errors){
-		Customer customer = (Customer)target;
+	private void validateNotEmptyChief(Customer customer, Errors errors){
 		if(customer.getChief()==null || (customer.getChief()!=null && customer.getChief().getId()==null))
-			errors.rejectValue("chief.id", "validation.emptyChief");
+			errors.rejectValue("chief", "validation.emptyChief");
+	}
+	
+	private void validateCustomerAndChiefNotEqual(Customer customer, Errors errors){
+		Customer chief = customer.getChief();
+		
+		if(chief!=null && customer.getId().equals(chief.getId())){
+			errors.rejectValue("chief", "validation.chiefAndCustomerEqual");
+		}
 	}
 }
+
