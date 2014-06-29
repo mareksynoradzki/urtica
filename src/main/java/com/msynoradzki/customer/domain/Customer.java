@@ -17,7 +17,7 @@ public class Customer extends BaseEntity {
 	@Column(name = "NAME")
 	private String name;
 
-	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "CHIEF_ID")
 	private Customer chief;
 

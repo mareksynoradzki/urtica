@@ -19,11 +19,9 @@
 		<form:label path="name"><spring:message code="customer.form.label.name"/>:</form:label>
         <form:input path="name" id="name" type="text"/>                        
     </div>
-    <div>
-    	<form:label path="chief.id"><spring:message code="customer.form.label.chief"/>:</form:label>
-<%--     	<form:select path="chief.id" items="${chiefList}" itemLabel="name" itemValue="id" /> --%>
-    	
-    	<form:select path="chief.id" id="chief.id">
+    <div>	
+    	<form:select path="chief.id" id="chief" >
+    			<form:option value=""></form:option>
                 <form:options items="${chiefList}" itemValue="id" itemLabel="name"/>
          </form:select>
     </div>

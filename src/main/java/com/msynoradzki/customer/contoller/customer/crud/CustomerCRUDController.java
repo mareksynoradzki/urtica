@@ -74,9 +74,11 @@ public class CustomerCRUDController {
     
     @RequestMapping(value = (ApplicationConstants.UPDATE_REQUEST_MAPPING + "/{id}"), method = RequestMethod.POST)
     public String update(@ModelAttribute("entity") @Valid Customer customer, BindingResult bindingResult, @PathVariable Long id, Model model,HttpSession session, RedirectAttributes attributes, HttpServletRequest request) {
+    	System.out.println("walidue");
     	customerValidator.validate(customer, bindingResult);
     	if(bindingResult.hasErrors()){
-                 return "/customer/" + ApplicationConstants.UPDATE_REQUEST_MAPPING + "/customer-success";
+    		 model.addAttribute("chiefList", prepareChiefList());
+    		 return "/" + ApplicationConstants.UPDATE_VIEW_CATALOGUE+ "/customer-success";
     	}
     	customerService.save(customer);
         return "redirect:/" + getViewName(request) + "/list";
@@ -87,6 +89,7 @@ public class CustomerCRUDController {
 		String path = request.getServletPath().substring(1, endIndex);
 		return path;
 	}
+	
 
     private List<Customer> prepareChiefList() {
 		return (List<Customer>) customerService.getAll();

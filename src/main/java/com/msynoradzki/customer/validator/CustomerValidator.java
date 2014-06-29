@@ -23,7 +23,8 @@ public class CustomerValidator implements Validator {
 	//TODO correct this method
 	private void validateChief(Object target, Errors errors){
 		Customer customer = (Customer)target;
-		if(customer.getChief()==null)
-			errors.rejectValue("chief", "validation.emptyChief");
+		System.out.println(customer +" validateChief");
+		if(customer.getChief()==null || (customer.getChief()!=null && customer.getChief().getId()==null))
+			errors.rejectValue("chief.id", "validation.emptyChief");
 	}
 }
